@@ -35,3 +35,38 @@ $W_kc_t$用于每一步k都有一个不同的$W_k$进行预测。或者，可以
 $$
 \mathcal{L}_N=-\mathbb{E}\left[log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in \mathbf{X}}f_k(x_j,c_t)}\right]
 $$
+优化这个损失函数将使得$f_k$估计密度比率。
+将这种损失的最优概率记为$p( d = i | X , c_t)$，其中[ d = i]是样本xi为"正"样本的指标。样本xi是由条件分布$p(x_{t+k}|c_t)$而不是建议分布$p(x_{t+k})$得出的概率如下：
+$$
+p(d=i|\mathbf{X},c_t)=\frac{p(x_i|c_t)\prod_{l\neq i}p(x_l)}{\sum_{j=1}^N p(x_j|c_t)\prod_{l\neq j}p(x_l)}=\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\sum_{j=1}^N \frac{p(x_j|c_t)}{p(x_j)}}
+$$
+
+$$
+I(x_{t+k},c_t)\ge log(N)-\mathcal{L}_N
+$$
+N越大，越贴近。
+
+##### prove
+$$
+\begin{align}
+\mathcal{L}_N^{opt} &= -\mathbb{E}_{X}log\left[\frac{\frac{p(x_i|c_t)}{p(x_i)}}{\frac{p(x_i|c_t)}{p(x_i)}+\sum_{x_j\in X_{neg}} \frac{p(x_j|c_t)}{p(x_j)}}\right]\\
+
+&=\mathbb{E}_{X}log\left[1+\frac{p(x_i)}{p(x_i|c_t)}\sum_{x_j\in X_{neg}}\frac{p(x_j|c_t)}{p(x_j)}\right]\\
+
+&\approx \mathbb{E}_{X}log\left[1+\frac{p(x_i)}{p(x_i|c_t)}(N-1)\mathbb{E}_{x_j}\frac{p(x_j|c_t)}{p(x_j)}\right]\\
+
+&=\mathbb{E}_{X}log\left[1+\frac{p(x_i)}{p(x_i|c_t)}(N-1)\right]\\
+&\ge \mathbb{E}_{X}log\left[\frac{p(x_i)}{p(x_i|c_t)}(N-1)\right]\\
+&= -I(x_i,c_t)+log(N-1)
+\end{align}
+$$
+
+对于(5)(6)原论文为：
+$$
+\begin{align}
+&=\mathbb{E}_{X}log\left[1+\frac{p(x_i)}{p(x_i|c_t)}(N-1)\right]\\
+&\ge \mathbb{E}_{X}log\left[\frac{p(x_i)}{p(x_i|c_t)}N\right]\\
+&= -I(x_i,c_t)+log(N)
+\end{align}
+$$
+我认为是在最优化条件下，$p(x_i)\le p(x_i|c_t)$。
