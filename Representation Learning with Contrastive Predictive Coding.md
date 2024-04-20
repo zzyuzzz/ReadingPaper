@@ -15,4 +15,23 @@
 $$
 I(x;c)=\sum_{x,c}p(x,c)log\frac{p(x,c)}{p(x)p(c)}=\sum_{x,c}p(x,c)log\frac{p(x|c)}{p(x)}
 $$
+最大化编码表示之间的互信息。
+### 对比预测编码CPC
+Figure 1中展示了对比预测编码（CPC）模型架构，首先，**$g_{enc}$表示一个非线性编码器，它将观测量$x_t$的输入序列映射成潜在表示$z_t=g_{enc}(x_t)$，具有较低的时间分辨率**。然后，自回归模型$g_ar$总结所有潜在空间中的$z_{\le t}$并产生一个上下文的潜在表示$c_t=g_{ar}(z_{\le t})$。
 
+不直接建模$p_k(x_{t+k}|c_t)$来预测$x_{t+k}$，而是建模$x_{t+k}$和$c_t$之间留存互信息的密度比率。
+
+$$
+f_k(x_{t+k},c_t)\propto \frac{p(x_{t+k}|c_t)}{p(x_{t+k})}
+$$
+注意到密度比f可以非正规化为(不必整合到1)。文章中使用了一个简单的对数双线性模型来建模它：
+$$
+f_k(x_{t+k},c_t)=exp(z_{t+k}^TW_kc_t)
+$$
+$W_kc_t$用于每一步k都有一个不同的$W_k$进行预测。或者，可以使用非线性网络或递归神经网络。
+
+### InfoNCE Loss
+给定N个随机样本集合X = { x1，.. xN }，其中1个来自$p(x_{t+k}|c_t)$的正样本，N - 1个来自"提议"分布$p(x_{t+k})$的负样本。
+$$
+\mathcal{L}_N=-\mathbb{E}\left[log\frac{f_k(x_{t+k},c_t)}{\sum_{x_j\in \mathbf{X}}f_k(x_j,c_t)}\right]
+$$
