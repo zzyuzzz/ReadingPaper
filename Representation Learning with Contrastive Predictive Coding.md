@@ -70,3 +70,13 @@ $$
 \end{align}
 $$
 我认为是在最优化条件下，$p(x_i)\le p(x_i|c_t)$。
+
+InfoNCE也与MINE（最大互信息估计）相关，记$f(x,c)=e^{F(x, c)}$,则：
+$$
+\begin{align}
+\mathbb{E}_X\left[log\frac{f(x,c)}{\sum_{x\in \mathbf{X}}f(x,c)}\right]\
+&=\mathbb{E}_{(x,c)}\left[F(x, c)\right]-\mathbb{E}_{(x,c)}\left[log\sum_{x_j\in X}e^{F(x_j, c)}\right]\\
+&=\mathbb{E}_{(x,c)}\left[F(x, c)\right]-\mathbb{E}_{(x,c)}\left[log\left(e^{F(x, c)}+\sum_{x_j\in X_{neg}}e^{F(x_j, c)}\right)\right]\\
+&\le \mathbb{E}_{(x,c)}\left[F(x, c)\right]-\mathbb{E}_{c}\left[log\left(\sum_{x_j\in X_{neg}}e^{F(x_j, c)}\right)\right]\\
+\end{align}
+$$
