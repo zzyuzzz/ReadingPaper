@@ -59,7 +59,7 @@ pip install transformers trl bitsandbytes peft datasets
 4. 加载模型
     ```python
     model = AutoModelForCausalLM.from_pretrained(
-        'meta-llama/Llama-2-7b-hf',
+        'meta-llama/Llama-2-7b-hf', ##如果没有访问权限可在huggingface申请并添加token=access_token参数
         quantization_config=quantization_config
     )
     model.config.use_cache = False
