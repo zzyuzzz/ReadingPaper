@@ -1,13 +1,17 @@
 # vLLM初识（一）
+
 ### 前言
+
 在[LLM推理优化——KV Cache篇（百倍提速）](LLMInference.md)中，我们已经介绍了**KV Cache**技术的原理，从中我们可以知道，**KV Cache本质是空间换时间的技术**，对于大型模型和长序列，它可能会占用大量内存。实际上LLM从诞生之初就在与内存作斗争，只是计算时间问题更加尖锐，掩盖了这一部分。随着研究的推进，内存问题也变得越来越突出。
 
 **vLLM**提出了**PagedAttention**方法，尝试通过将 KV 缓存划分为可通过查找表访问的块来优化内存使用。因此，KV 缓存不需要存储在连续内存中，并且根据需要分配块。内存效率可以提高内存受限工作负载上的 GPU 利用率，因此可以支持更多推理批处理。我接下来就使用几篇博客来初步了解一下**vLLM**。
 
 ### vLLM初探
+
 vLLM 是一个快速且易于使用的库，用于 LLM 推理和服务。
 
 vLLM速度很快，具有以下特点：
+
 + 最先进的服务吞吐量
 + 使用 PagedAttention 高效管理注意力键和值内存
 + 连续批处理传入请求
@@ -16,6 +20,7 @@ vLLM速度很快，具有以下特点：
 + 优化的 CUDA 内核
 
 vLLM 灵活且易于使用：
+
 + 与流行的 HuggingFace 型号无缝集成
 + 使用各种解码算法提供高吞吐量服务，包括并行采样、波束搜索等
 + 面向分布式推理的张量并行性和流水线并行性支持
@@ -54,4 +59,3 @@ pip install -e .  # This may take 5-10 minutes.
 # Use `--ipc=host` to make sure the shared memory is large enough.
 docker run --gpus all -it --rm --ipc=host nvcr.io/nvidia/pytorch:23.10-py3
 ```
-
